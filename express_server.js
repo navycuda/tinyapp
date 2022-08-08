@@ -1,6 +1,7 @@
 /* Require */
 const morgan = require('morgan');
 const express = require('express');
+const { response } = require('express');
 const app = express();
 
 /* Tcp:Http */
@@ -29,6 +30,9 @@ app.get('/urls', (request, response) => {
   const templateVars = { urls: urlDataBase };
   response.render('urls_index', templateVars);
 });
+app.get('/urls/:id', (request, response) => {
+  console.log(request.params.id);
+});
 // GET - urls.json
 app.get('/urls.json', (request, response) => {
   response.json(urlDataBase);
@@ -45,6 +49,10 @@ app.get('/set', (request, response) => {
 // GET - fetch
 app.get('/fetch', (request, response) => {
   response.send(`a = ${a}`);
+});
+app.get(`*`, (request, response) => {
+  response.statusCode = 404;
+  response.send('Not good bro, not good.');
 });
 
 /* Execution & Test Data */
