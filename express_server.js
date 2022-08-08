@@ -31,6 +31,15 @@ app.get('/urls.json', (request, response) => {
 app.get('/hello', (request, response) => {
   response.send("<html><body>Hello <b>World</b></body></html>\n");
 });
+// GET - set
+app.get('/set', (request, response) => {
+  const a = 1;
+  response.send(`a = ${a}`);
+});
+// GET - fetch
+app.get('/fetch', (request, response) => {
+  response.send(`a = ${a}`);
+});
 
 /* Execution & Test Data */
 app.listen(PORT, () => {
