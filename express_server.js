@@ -31,7 +31,7 @@ app.get('/urls', (request, response) => {
   response.render('urls_index', templateVars);
 });
 app.get('/urls/:id', (request, response) => {
-  console.log(request.params.id);
+  response.send(request.params.id);
 });
 // GET - urls.json
 app.get('/urls.json', (request, response) => {
