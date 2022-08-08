@@ -24,8 +24,12 @@ app.get('/', (request, response) => {
   response.send('Hello!');
 });
 // GET - urls.json
-app.get('/urls.json', (required, response) => {
+app.get('/urls.json', (request, response) => {
   response.json(urlDataBase);
+});
+// GET - hello in html
+app.get('/hello', (request, response) => {
+  response.send("<html><body>Hello <b>World</b></body></html>\n");
 });
 
 /* Execution & Test Data */
