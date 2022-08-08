@@ -7,6 +7,7 @@ const app = express();
 const PORT = 8080;
 
 /* Middleware */
+app.set('view engine', 'ejs');
 app.use(morgan('dev'));
 
 /* Arguments & Properties */
@@ -22,6 +23,11 @@ const urlDataBase = {
 // GET - HomePage
 app.get('/', (request, response) => {
   response.send('Hello!');
+});
+// GET - urls
+app.get('/urls', (request, response) => {
+  const templateVars = { urls: urlDataBase };
+  response.render('urls_index', templateVars);
 });
 // GET - urls.json
 app.get('/urls.json', (request, response) => {
