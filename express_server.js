@@ -19,8 +19,13 @@ const urlDataBase = {
 /* Export Functions */
 /* Local Functions */
 /* Endpoints */
+// GET - HomePage
 app.get('/', (request, response) => {
   response.send('Hello!');
+});
+// GET - urls.json
+app.get('/urls.json', (required, response) => {
+  response.json(urlDataBase);
 });
 
 /* Execution & Test Data */
