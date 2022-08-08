@@ -30,8 +30,10 @@ app.get('/urls', (request, response) => {
   const templateVars = { urls: urlDataBase };
   response.render('urls_index', templateVars);
 });
+// GET - url by ID
 app.get('/urls/:id', (request, response) => {
-  response.send(request.params.id);
+  const templateVars = { id: request.params.id, longURL: urlDataBase[this.id] };
+  response.render('urls_show', templateVars);
 });
 // GET - urls.json
 app.get('/urls.json', (request, response) => {
