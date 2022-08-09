@@ -27,10 +27,7 @@ const generateRandomString = (length) => {
   const chars = "aAbBcCdDeEfFgGhHiIjJkKlLmMnNoOpPqQrRsStTuUvVwWxXyYzZ0123456789";
   let result = '';
   for (let l = 0; l < length; l++) {
-    const pos = getRandomNumber(chars.length);
-    const char = chars[pos];
-    if (!char) console.log(pos);
-    result += char;
+    result += chars[getRandomNumber(chars.length)];
   }
   return result;
 };
