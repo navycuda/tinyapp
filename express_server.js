@@ -21,7 +21,7 @@ const urlDataBase = {
 /* Classes */
 /* Export Functions */
 /* Local Functions */
-const getRandomNumber = (num) {
+const getRandomNumber = (num) => {
   return (Math.floor(Math.random() * num)) + 1;
 } 
 const generateRandomString = (length) => {
