@@ -76,7 +76,9 @@ app.get(`*`, (request, response) => {
 // POST - new url
 app.post('/urls', (request, response) => {
   console.log(request.body);
-  response.send(generateRandomString(6));
+  const { key, value } = request.body;
+  urlDataBase[key] = value;
+  response.send(`${generateRandomString(6)} and the long url is??? ${request.body.longURL}`);
 });
 
 /* Execution & Test Data */
