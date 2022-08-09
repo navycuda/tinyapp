@@ -85,6 +85,10 @@ app.post('/urls', (request, response) => {
   //response.send(`${randomUrl} and the long url is??? ${request.body.longURL}`);
   response.redirect(`/urls/${randomUrl}`);
 });
+// POST - Delete Url
+app.post('urls/:id/delete', (request, response) => {
+  delete urlDataBase[request.params.id];
+});
 
 /* Execution & Test Data */
 app.listen(PORT, () => {
