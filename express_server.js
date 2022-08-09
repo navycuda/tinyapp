@@ -10,6 +10,7 @@ const PORT = 8080;
 /* Middleware */
 app.set('view engine', 'ejs');
 app.use(morgan('dev'));
+app.use(express.urlencoded({ extended: true }));
 
 /* Arguments & Properties */
 const urlDataBase = {
