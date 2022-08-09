@@ -21,13 +21,16 @@ const urlDataBase = {
 /* Export Functions */
 /* Local Functions */
 const getRandomNumber = (num) => {
-  return (Math.floor(Math.random() * num)) + 1;
+  return (Math.floor(Math.random() * num));
 };
 const generateRandomString = (length) => {
   const chars = "aAbBcCdDeEfFgGhHiIjJkKlLmMnNoOpPqQrRsStTuUvVwWxXyYzZ0123456789";
   let result = '';
   for (let l = 0; l < length; l++) {
-    result += chars[getRandomNumber(chars.length)];
+    const pos = getRandomNumber(chars.length);
+    const char = chars[pos];
+    if (!char) console.log(pos);
+    result += char;
   }
   return result;
 };
@@ -84,13 +87,10 @@ app.post('/urls/:id/delete', (request, response) => {
 // POST - Edit the long URL
 app.post('/urls/:id', (request, response) => {
   const id = request.params.id;
-  urlDataBase[id] = request.params.newUrl;
-
-  console.log(request.params);
-  console.log(id);
-
+  urlDataBase[id] = request.body.longURL;
   response.redirect('/urls');
 });
+
 
 
 /* Execution & Test Data */
