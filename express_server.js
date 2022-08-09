@@ -1,7 +1,7 @@
 /* Require */
 const morgan = require('morgan');
 const express = require('express');
-const { response } = require('express');
+const { response, request } = require('express');
 const app = express();
 
 /* Tcp:Http */
@@ -60,6 +60,11 @@ app.get('/fetch', (request, response) => {
 app.get(`*`, (request, response) => {
   response.statusCode = 404;
   response.send('Not good bro, not good.');
+});
+// POST - new url
+app.post('/urls', (request, response) => {
+  console.log(request.body);
+  response.send('Okay');
 });
 
 /* Execution & Test Data */
