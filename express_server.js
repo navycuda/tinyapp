@@ -30,6 +30,10 @@ app.get('/urls', (request, response) => {
   const templateVars = { urls: urlDataBase };
   response.render('urls_index', templateVars);
 });
+// Get - new url
+app.get('/urls/new', (request, response) => {
+  response.render('urls_new');
+});
 // GET - url by ID
 app.get('/urls/:id', (request, response) => {
   const templateVars = { id: request.params.id, longURL: urlDataBase[this.id] };
