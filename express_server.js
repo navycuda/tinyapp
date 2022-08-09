@@ -21,6 +21,18 @@ const urlDataBase = {
 /* Classes */
 /* Export Functions */
 /* Local Functions */
+const getRandomNumber = (num) {
+  return (Math.floor(Math.random() * num)) + 1;
+} 
+const generateRandomString = (length) => {
+  const chars = "aAbBcCdDeEfFgGhHiIjJkKlLmMnNoOpPqQrRsStTuUvVwWxXyYzZ0123456789";
+  let result = '';
+  for (let l = 0; l < length; l++) {
+    result += chars[getRandomNumber(chars.length)];
+  }
+  return result;
+};
+
 /* Endpoints */
 // GET - HomePage
 app.get('/', (request, response) => {
@@ -64,7 +76,7 @@ app.get(`*`, (request, response) => {
 // POST - new url
 app.post('/urls', (request, response) => {
   console.log(request.body);
-  response.send('Okay');
+  response.send(generateRandomString(6));
 });
 
 /* Execution & Test Data */
