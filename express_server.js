@@ -1,7 +1,6 @@
 /* Require */
 const morgan = require('morgan');
 const express = require('express');
-const { response, request } = require('express');
 const app = express();
 
 /* Tcp:Http */
@@ -23,7 +22,7 @@ const urlDataBase = {
 /* Local Functions */
 const getRandomNumber = (num) => {
   return (Math.floor(Math.random() * num)) + 1;
-} 
+};
 const generateRandomString = (length) => {
   const chars = "aAbBcCdDeEfFgGhHiIjJkKlLmMnNoOpPqQrRsStTuUvVwWxXyYzZ0123456789";
   let result = '';
@@ -54,7 +53,8 @@ app.get('/urls/new', (request, response) => {
 });
 // GET - url by ID
 app.get('/urls/:id', (request, response) => {
-  const templateVars = { id: request.params.id, longURL: urlDataBase[this.id] };
+  const urlId = request.params.id;
+  const templateVars = { id: urlId, longURL: urlDataBase[urlId] };
   response.render('urls_show', templateVars);
 });
 // GET - urls.json
