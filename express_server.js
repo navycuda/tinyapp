@@ -38,6 +38,11 @@ const generateRandomString = (length) => {
 app.get('/', (request, response) => {
   response.send('Hello!');
 });
+// GET - /u/:id
+app.get('/u/:id', (request, response) => {
+  const longURL = (urlDataBase[request.body.id]) ? urlDataBase[request.body.id] : 'notFound'; 
+  response.redirect(longURL);
+});
 // GET - urls
 app.get('/urls', (request, response) => {
   const templateVars = { urls: urlDataBase };
