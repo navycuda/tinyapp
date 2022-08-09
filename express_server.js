@@ -81,11 +81,13 @@ app.post('/urls/:id/delete', (request, response) => {
   delete urlDataBase[request.params.id];
   response.redirect('/urls');
 });
+// POST - Edit the long URL
 app.post('/urls/:id', (request, response) => {
   const id = request.params.id;
-  urlDataBase[id].longURL = request.body.newUrl;
+  urlDataBase[id] = request.params.newUrl;
 
-  console.log(request.body);
+  console.log(request.params);
+  console.log(id);
 
   response.redirect('/urls');
 });
