@@ -86,8 +86,9 @@ app.post('/urls', (request, response) => {
   response.redirect(`/urls/${randomUrl}`);
 });
 // POST - Delete Url
-app.post('urls/:id/delete', (request, response) => {
+app.post('/urls/:id/delete', (request, response) => {
   delete urlDataBase[request.params.id];
+  response.redirect('/urls');
 });
 
 /* Execution & Test Data */
