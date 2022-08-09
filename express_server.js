@@ -81,6 +81,14 @@ app.post('/urls/:id/delete', (request, response) => {
   delete urlDataBase[request.params.id];
   response.redirect('/urls');
 });
+app.post('/urls/:id', (request, response) => {
+  const id = request.params.id;
+  urlDataBase[id].longURL = request.body.newUrl;
+
+  console.log(request.body);
+
+  response.redirect('/urls');
+});
 
 
 /* Execution & Test Data */
