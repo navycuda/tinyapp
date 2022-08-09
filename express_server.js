@@ -40,7 +40,7 @@ app.get('/', (request, response) => {
 });
 // GET - /u/:id
 app.get('/u/:id', (request, response) => {
-  const longURL = (urlDataBase[request.body.id]) ? urlDataBase[request.body.id] : 'notFound'; 
+  const longURL = (urlDataBase[request.params.id]) ? urlDataBase[request.params.id] : 'notFound';
   response.redirect(longURL);
 });
 // GET - urls
@@ -82,7 +82,8 @@ app.get(`*`, (request, response) => {
 app.post('/urls', (request, response) => {
   const randomUrl = generateRandomString(6);
   urlDataBase[randomUrl] = request.body.longURL;
-  response.send(`${randomUrl} and the long url is??? ${request.body.longURL}`);
+  //response.send(`${randomUrl} and the long url is??? ${request.body.longURL}`);
+  response.redirect(`/urls/${randomUrl}`);
 });
 
 /* Execution & Test Data */
