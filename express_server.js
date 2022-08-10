@@ -19,18 +19,7 @@ const urlDataBase = {
   'b2xVn2': 'http://www.lighthouselabs.ca',
   '9sm5xK': 'http://www.google.com'
 };
-const userDataBase = {
-  'navycuda' : {
-    id: 'navycuda',
-    email: 'navycuda@hotmail.com',
-    password: 'noPassword'
-  },
-  'topsecret' : {
-    id: 'topsecret',
-    email: 'topsecret@localhost.com',
-    password: 'password'
-  }
-};
+const userDataBase = {};
 
 /* Export Functions */
 /* Local Functions */
@@ -66,6 +55,9 @@ class User {
     this.tinyIds = [];
   }
 }
+
+
+
 /* Endpoints */
 /**
  * GET ***********************************************
@@ -152,4 +144,11 @@ app.post('/register', (request, response) => {
 app.listen(PORT, () => {
   console.log(`Example app listening on port ${PORT}`);
 });
+
+const navycuda = new User('navycuda', 'noPassword');
+const topsecret = new User('topSecret', 'password');
+userDataBase[navycuda.uid] = navycuda;
+userDataBase[topsecret.uid] = topsecret;
+
+console.log(userDataBase);
 /* Exports */
