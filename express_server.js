@@ -1,6 +1,7 @@
 /* Require */
 const morgan = require('morgan');
 const express = require('express');
+const cookieParser = require('cookie-parser');
 const app = express();
 
 /* Tcp:Http */
