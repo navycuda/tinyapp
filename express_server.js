@@ -53,6 +53,11 @@ const findUidByUsername = (username, database) => {
   }
   return false;
 };
+const getUserByRequest = (request) => {
+  const uid = request.cookies.uid;
+  const user = uid ? userDataBase[uid] : null;
+  return user
+};
 
 /* Classes */
 class User {
@@ -82,20 +87,21 @@ app.get('/u/:id', (request, response) => {
 });
 // GET - urls
 app.get('/urls', (request, response) => {
-  const uid = request.cookies.uid;
-  const user = uid ? userDataBase[uid] : null;
+  const user = getUserByRequest(request);
   const templateVars = { user, urls: urlDataBase };
   response.render('urls_index', templateVars);
 });
 // Get - new url
 app.get('/urls/new', (request, response) => {
-  const templateVars = { username: request.cookies.username };
+  const user = getUserByRequest(request);
+  const templateVars = { user };
   response.render('urls_new', templateVars);
 });
 // GET - url by ID
 app.get('/urls/:id', (request, response) => {
   const urlId = request.params.id;
-  const templateVars = { username: request.cookies.username, id: urlId, longURL: urlDataBase[urlId] };
+  const user = getUserByRequest(request);
+  const templateVars = { user, id: urlId, longURL: urlDataBase[urlId] };
   response.render('urls_show', templateVars);
 });
 // GET - login
@@ -105,8 +111,7 @@ app.get('/login', (request, response) => {
 });
 // GET - register
 app.get('/register', (request, response) => {
-  const uid = request.cookies.uid;
-  const user = uid ? userDataBase[uid] : null;
+  const user = null;
   const templateVars = { user };
   response.render('user_registration', templateVars);
 });
@@ -122,9 +127,13 @@ app.post('/login', (request, response) => {
   const uid = findUidByUsername(username, userDataBase);
   if (uid) {
     const user = userDataBase[uid];
-    if (user.passwordIsValid(password)) response.cookie('uid', uid);
+    if (user.passwordIsValid(password)) {
+      response.cookie('uid', uid);
+      response.redirect('/urls');
+      return;
+    }
   }
-  response.redirect('/urls');
+  response.redirect('/login');
 });
 // POST - user logout
 app.post('/logout', (request, response) => {
