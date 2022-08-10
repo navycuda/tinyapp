@@ -31,6 +31,17 @@ const generateRandomString = (length) => {
   }
   return result;
 };
+const generateNewKey = (length, comparisonData) => {
+  let isDefined = true;
+  let result;
+  while (isDefined) {
+    result = generateRandomString(length);
+    if (!comparisonData[result]) {
+      isDefined = false;
+    }
+  }
+  return result;
+};
 
 /* Endpoints */
 // GET - HomePage
@@ -71,7 +82,7 @@ app.get(`*`, (request, response) => {
 });
 // POST - new url
 app.post('/urls', (request, response) => {
-  const randomUrl = generateRandomString(6);
+  const randomUrl = generateNewKey(6, urlDataBase);
   urlDataBase[randomUrl] = request.body.longURL;
   //response.send(`${randomUrl} and the long url is??? ${request.body.longURL}`);
   response.redirect(`/urls/${randomUrl}`);
