@@ -72,6 +72,11 @@ app.get('/urls/:id', (request, response) => {
   const templateVars = { username: request.cookies.username, id: urlId, longURL: urlDataBase[urlId] };
   response.render('urls_show', templateVars);
 });
+// Get - register
+app.get('/register', (request, response) => {
+  const templateVars = { username: request.cookies.username };
+  response.render('user_registration', templateVars);
+});
 app.get(`*`, (request, response) => {
   response.statusCode = 404;
   response.send('404: Not good bro, not good.');
@@ -102,6 +107,10 @@ app.post('/urls/:id/delete', (request, response) => {
 app.post('/urls/:id', (request, response) => {
   const id = request.params.id;
   urlDataBase[id] = request.body.longURL;
+  response.redirect('/urls');
+});
+app.post('/register', (request, response) => {
+  console.log(request.body);
   response.redirect('/urls');
 });
 
