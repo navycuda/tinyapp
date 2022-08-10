@@ -63,6 +63,9 @@ class User {
     this.password = password;
     this.tinyIds = [];
   }
+  passwordIsValid(password) {
+    return this.password === password;
+  }
 }
 
 
@@ -95,7 +98,12 @@ app.get('/urls/:id', (request, response) => {
   const templateVars = { username: request.cookies.username, id: urlId, longURL: urlDataBase[urlId] };
   response.render('urls_show', templateVars);
 });
-// Get - register
+// GET - login
+app.get('/login', (request, response) => {
+  const templateVars = { user: null };
+  response.render('user_login', templateVars);
+});
+// GET - register
 app.get('/register', (request, response) => {
   const uid = request.cookies.uid;
   const user = uid ? userDataBase[uid] : null;
@@ -109,12 +117,18 @@ app.get(`*`, (request, response) => {
 
 // POST - user login
 app.post('/login', (request, response) => {
-  response.cookie('username', request.body.username);
+  const username = request.body.username;
+  const password = request.body.password;
+  const uid = findUidByUsername(username, userDataBase);
+  if (uid) {
+    const user = userDataBase[uid];
+    if (user.passwordIsValid(password)) response.cookie('uid', uid);
+  }
   response.redirect('/urls');
 });
 // POST - user logout
 app.post('/logout', (request, response) => {
-  response.clearCookie('username');
+  response.clearCookie('uid');
   response.redirect('/urls');
 });
 // POST - new url
