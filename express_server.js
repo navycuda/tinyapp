@@ -79,11 +79,9 @@ app.get('/u/:id', (request, response) => {
 });
 // GET - urls
 app.get('/urls', (request, response) => {
-  console.log('cookies:', request.cookies);
   const uid = request.cookies.uid;
   const user = uid ? userDataBase[uid] : null;
-
-  const templateVars = { username: user ? user.username : null , urls: urlDataBase };
+  const templateVars = { user, urls: urlDataBase };
   response.render('urls_index', templateVars);
 });
 // Get - new url
@@ -99,7 +97,9 @@ app.get('/urls/:id', (request, response) => {
 });
 // Get - register
 app.get('/register', (request, response) => {
-  const templateVars = { username: request.cookies.username };
+  const uid = request.cookies.uid;
+  const user = uid ? userDataBase[uid] : null;
+  const templateVars = { user };
   response.render('user_registration', templateVars);
 });
 app.get(`*`, (request, response) => {
