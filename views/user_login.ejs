@@ -1,0 +1,28 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8">
+  <meta http-equiv="X-UA-Compatible" content="IE=edge">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>User Login</title>
+  <!-- Bootstrap CSS -->
+  <link
+  rel="stylesheet"
+  href="https://stackpath.bootstrapcdn.com/bootstrap/4.2.1/css/bootstrap.min.css"
+  integrity="sha384-GJzZqFGwb1QTTN6wy59ffF1BuGJpLSa9DkKMp0DgiMDm4iYMj70gZWKYbI706tWS"
+  crossorigin="anonymous"
+  />
+  <link rel="stylesheet" href="/css/app.css">
+</head>
+<body>
+  <%- include('partial/_header') %>
+
+  <form method="POST" action="/register">
+    <label for="username">Username:</label>
+    <input type="text" name="username">   
+    <label for="password">Password:</label>
+    <input type="password" name="password">
+    <button type="submit">Register</button>
+  </form>
+</body>
+</html>
