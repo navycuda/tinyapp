@@ -48,7 +48,7 @@ const generateNewKey = (length, comparisonData) => {
 /* Endpoints */
 // GET - HomePage
 app.get('/', (request, response) => {
-  response.send('Hello!');
+  response.redirect('/urls');
 });
 // GET - /u/:id
 app.get('/u/:id', (request, response) => {
@@ -58,23 +58,23 @@ app.get('/u/:id', (request, response) => {
 // GET - urls
 app.get('/urls', (request, response) => {
   console.log('cookies:', request.cookies);
-  const templateVars = { username: request.cookies.username , urls: urlDataBase };
+  const templateVars = { username: request.cookies.username, urls: urlDataBase };
   response.render('urls_index', templateVars);
 });
 // Get - new url
 app.get('/urls/new', (request, response) => {
-  const templateVars = {  };
+  const templateVars = { username: request.cookies.username };
   response.render('urls_new', templateVars);
 });
 // GET - url by ID
 app.get('/urls/:id', (request, response) => {
   const urlId = request.params.id;
-  const templateVars = { id: urlId, longURL: urlDataBase[urlId] };
+  const templateVars = { username: request.cookies.username, id: urlId, longURL: urlDataBase[urlId] };
   response.render('urls_show', templateVars);
 });
 app.get(`*`, (request, response) => {
   response.statusCode = 404;
-  response.send('Not good bro, not good.');
+  response.send('404: Not good bro, not good.');
 });
 // POST - user login
 app.post('/login', (request, response) => {
