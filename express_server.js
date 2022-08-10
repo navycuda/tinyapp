@@ -31,7 +31,6 @@ const userDataBase = {
   }
 };
 
-/* Classes */
 /* Export Functions */
 /* Local Functions */
 const getRandomNumber = (num) => {
@@ -56,7 +55,19 @@ const generateNewKey = (length, comparisonData) => {
   }
   return result;
 };
+const generateNewUID = (users) => {
 
+};
+
+/* Classes */
+class User {
+  constructor(username, password) {
+    const uid = 
+    this.uid = 
+    this.username = username;
+    this.password = password;
+  }
+}
 /* Endpoints */
 // GET - HomePage
 app.get('/', (request, response) => {
