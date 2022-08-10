@@ -56,26 +56,19 @@ app.get('/u/:id', (request, response) => {
 });
 // GET - urls
 app.get('/urls', (request, response) => {
-  const templateVars = { urls: urlDataBase };
+  const templateVars = { username: request.cookies['username'], urls: urlDataBase };
   response.render('urls_index', templateVars);
 });
 // Get - new url
 app.get('/urls/new', (request, response) => {
-  response.render('urls_new');
+  const templateVars = { username: request.cookies['username'] };
+  response.render('urls_new', templateVars);
 });
 // GET - url by ID
 app.get('/urls/:id', (request, response) => {
   const urlId = request.params.id;
-  const templateVars = { id: urlId, longURL: urlDataBase[urlId] };
+  const templateVars = { username: request.cookies['username'], id: urlId, longURL: urlDataBase[urlId] };
   response.render('urls_show', templateVars);
-});
-// GET - urls.json
-app.get('/urls.json', (request, response) => {
-  response.json(urlDataBase);
-});
-// GET - hello in html
-app.get('/hello', (request, response) => {
-  response.send("<html><body>Hello <b>World</b></body></html>\n");
 });
 app.get(`*`, (request, response) => {
   response.statusCode = 404;
@@ -83,7 +76,7 @@ app.get(`*`, (request, response) => {
 });
 // POST - user login
 app.post('/login', (request, response) => {
-  response.cookie(request.body.username);
+  response.cookie('username', request.body.username);
   response.redirect('/urls');
 });
 // POST - new url
