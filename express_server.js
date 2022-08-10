@@ -81,6 +81,11 @@ app.post('/login', (request, response) => {
   response.cookie('username', request.body.username);
   response.redirect('/urls');
 });
+// POST - user logout
+app.post('/logout', (request, response) => {
+  response.clearCookie('username');
+  response.redirect('/urls');
+});
 // POST - new url
 app.post('/urls', (request, response) => {
   const randomUrl = generateNewKey(6, urlDataBase);
