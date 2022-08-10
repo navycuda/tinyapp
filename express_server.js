@@ -12,6 +12,7 @@ app.set('view engine', 'ejs');
 app.use(morgan('dev'));
 app.use(express.urlencoded({ extended: true }));
 app.use(cookieParser());
+app.use(express.static('public'));
 
 /* Arguments & Properties */
 const urlDataBase = {
@@ -55,20 +56,20 @@ const generateNewKey = (length, comparisonData) => {
   }
   return result;
 };
-const generateNewUID = (users) => {
-
-};
 
 /* Classes */
 class User {
   constructor(username, password) {
-    const uid = 
-    this.uid = 
+    this.uid = generateNewKey(8, userDataBase);
     this.username = username;
     this.password = password;
+    this.tinyIds = [];
   }
 }
 /* Endpoints */
+/**
+ * GET ***********************************************
+ */
 // GET - HomePage
 app.get('/', (request, response) => {
   response.redirect('/urls');
@@ -104,6 +105,9 @@ app.get(`*`, (request, response) => {
   response.statusCode = 404;
   response.send('404: Not good bro, not good.');
 });
+/**
+ * POST ***********************************************
+ */
 // POST - user login
 app.post('/login', (request, response) => {
   response.cookie('username', request.body.username);
