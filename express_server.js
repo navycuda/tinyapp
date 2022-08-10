@@ -81,6 +81,11 @@ app.get(`*`, (request, response) => {
   response.statusCode = 404;
   response.send('Not good bro, not good.');
 });
+// POST - user login
+app.post('/login', (request, response) => {
+  response.cookie(request.body.username);
+  response.redirect('/urls');
+});
 // POST - new url
 app.post('/urls', (request, response) => {
   const randomUrl = generateNewKey(6, urlDataBase);
