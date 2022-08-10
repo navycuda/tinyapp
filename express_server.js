@@ -45,7 +45,6 @@ const generateNewKey = (length, comparisonData) => {
   }
   return result;
 };
-
 /* Classes */
 class User {
   constructor(username, password) {
@@ -59,9 +58,6 @@ class User {
 
 
 /* Endpoints */
-/**
- * GET ***********************************************
- */
 // GET - HomePage
 app.get('/', (request, response) => {
   response.redirect('/urls');
@@ -97,9 +93,7 @@ app.get(`*`, (request, response) => {
   response.statusCode = 404;
   response.send('404: Not good bro, not good.');
 });
-/**
- * POST ***********************************************
- */
+
 // POST - user login
 app.post('/login', (request, response) => {
   response.cookie('username', request.body.username);
@@ -137,8 +131,6 @@ app.post('/register', (request, response) => {
 
   response.redirect('/urls');
 });
-
-
 
 /* Execution & Test Data */
 app.listen(PORT, () => {
