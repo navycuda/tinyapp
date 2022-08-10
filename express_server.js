@@ -11,6 +11,7 @@ const PORT = 8080;
 app.set('view engine', 'ejs');
 app.use(morgan('dev'));
 app.use(express.urlencoded({ extended: true }));
+app.use(cookieParser());
 
 /* Arguments & Properties */
 const urlDataBase = {
@@ -56,18 +57,19 @@ app.get('/u/:id', (request, response) => {
 });
 // GET - urls
 app.get('/urls', (request, response) => {
-  const templateVars = { username: request.cookies['username'], urls: urlDataBase };
+  console.log('cookies:', request.cookies);
+  const templateVars = { username: request.cookies.username , urls: urlDataBase };
   response.render('urls_index', templateVars);
 });
 // Get - new url
 app.get('/urls/new', (request, response) => {
-  const templateVars = { username: request.cookies['username'] };
+  const templateVars = {  };
   response.render('urls_new', templateVars);
 });
 // GET - url by ID
 app.get('/urls/:id', (request, response) => {
   const urlId = request.params.id;
-  const templateVars = { username: request.cookies['username'], id: urlId, longURL: urlDataBase[urlId] };
+  const templateVars = { id: urlId, longURL: urlDataBase[urlId] };
   response.render('urls_show', templateVars);
 });
 app.get(`*`, (request, response) => {
