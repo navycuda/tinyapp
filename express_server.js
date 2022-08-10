@@ -47,9 +47,10 @@ const generateNewKey = (length, comparisonData) => {
 };
 /* Classes */
 class User {
-  constructor(username, password) {
+  constructor(username, email, password) {
     this.uid = generateNewKey(8, userDataBase);
     this.username = username;
+    this.email = email;
     this.password = password;
     this.tinyIds = [];
   }
@@ -137,8 +138,8 @@ app.listen(PORT, () => {
   console.log(`Example app listening on port ${PORT}`);
 });
 
-const navycuda = new User('navycuda', 'noPassword');
-const topsecret = new User('topSecret', 'password');
+const navycuda = new User('navycuda', 'n@n.com', 'noPassword');
+const topsecret = new User('topSecret', 't@n.com', 'password');
 userDataBase[navycuda.uid] = navycuda;
 userDataBase[topsecret.uid] = topsecret;
 
