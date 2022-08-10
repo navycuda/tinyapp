@@ -124,6 +124,7 @@ app.post('/urls/:id', (request, response) => {
 app.post('/register', (request, response) => {
   console.log(request.body);
 
+  // Look into express.static (for getting our css)
 
 
 
