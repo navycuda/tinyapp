@@ -18,6 +18,18 @@ const urlDataBase = {
   'b2xVn2': 'http://www.lighthouselabs.ca',
   '9sm5xK': 'http://www.google.com'
 };
+const userDataBase = {
+  'navycuda' : {
+    id: 'navycuda',
+    email: 'navycuda@hotmail.com',
+    password: 'noPassword'
+  },
+  'topsecret' : {
+    id: 'topsecret',
+    email: 'topsecret@localhost.com',
+    password: 'password'
+  }
+};
 
 /* Classes */
 /* Export Functions */
@@ -111,6 +123,10 @@ app.post('/urls/:id', (request, response) => {
 });
 app.post('/register', (request, response) => {
   console.log(request.body);
+
+
+
+
   response.redirect('/urls');
 });
 
