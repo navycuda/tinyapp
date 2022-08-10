@@ -15,8 +15,9 @@
     <div class="collapse navbar-collapse" id="navbarNavAltMarkup">
       <div class="navbar-nav">
         <a class="nav-item nav-link" href="/urls">My URLs</a>
-        <a class="nav-item nav-link" href="/urls/new">Create New URL</a>
-
+        <% if (user) { %>
+          <a class="nav-item nav-link" href="/urls/new">Create New URL</a>
+        <% } %>
       </div>
       <div class="col" style="display: flex; justify-content: end;">
         <% if (user) { %>
@@ -25,8 +26,10 @@
             <button type="submit" class="btn btn-primary">logout</button>
           </form>
         <% } else { %>
-          <form method="POST" action="/login">
-            <input type="text" name="username" value="username">
+          <form method="GET" action="/register">
+            <button type="submit" class="btn btn-primary">register</button>
+          </form>
+          <form method="GET" action="/login">
             <button type="submit" class="btn btn-primary">login</button>
           </form>
         <% } %>
