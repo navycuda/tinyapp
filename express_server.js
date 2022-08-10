@@ -45,10 +45,19 @@ const generateNewKey = (length, comparisonData) => {
   }
   return result;
 };
+const findUidByUsername = (username, database) => {
+  for (let key in database) {
+    if (database[key].username === username) {
+      return database[key].uid;
+    }
+  }
+  return false;
+};
+
 /* Classes */
 class User {
   constructor(username, email, password) {
-    this.uid = generateNewKey(8, userDataBase);
+    this.uid = generateNewKey(6, userDataBase);
     this.username = username;
     this.email = email;
     this.password = password;
@@ -71,7 +80,10 @@ app.get('/u/:id', (request, response) => {
 // GET - urls
 app.get('/urls', (request, response) => {
   console.log('cookies:', request.cookies);
-  const templateVars = { username: request.cookies.username, urls: urlDataBase };
+  const uid = request.cookies.uid;
+  const user = uid ? userDataBase[uid] : null;
+
+  const templateVars = { username: user ? user.username : null , urls: urlDataBase };
   response.render('urls_index', templateVars);
 });
 // Get - new url
@@ -124,12 +136,17 @@ app.post('/urls/:id', (request, response) => {
   response.redirect('/urls');
 });
 app.post('/register', (request, response) => {
-  console.log(request.body);
-
+  console.log("app.post('/register')",request.body);
+  const username = request.body.username;
+  const email = request.body.email;
+  const password = request.body.password;
   // Look into express.static (for getting our css)
+  const user = new User(username, email, password);
 
-
-
+  
+  userDataBase[user.uid] = user;
+  response.cookie('uid', user.uid);
+  console.log("app.post('/register') : userDataBase: ", userDataBase);
   response.redirect('/urls');
 });
 
