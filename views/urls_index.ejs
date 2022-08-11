@@ -37,7 +37,7 @@
               <td>
                 <a href="/u/<%= id %>" class="btn btn-primary"><%= id %></a>
               </td>
-              <td><%= urls[id] %></td>
+              <td><%= urls[id].longURL %></td>
               <td>
                 <form method="GET" action="/urls/<%= id %>">
                   <input class="btn btn-light" type="submit" value="Edit">
