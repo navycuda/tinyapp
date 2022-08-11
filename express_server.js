@@ -51,7 +51,7 @@ const getUidByUsername = (username, database) => {
       return database[key].uid;
     }
   }
-  return false;
+  return null;
 };
 const getUserByRequest = (request) => {
   const uid = request.cookies.uid;
@@ -64,7 +64,7 @@ const getUidByEmail = (email, database) => {
       return database[key].uid;
     }
   }
-  return false;
+  return null;
 };
 
 /* Classes */
@@ -123,6 +123,10 @@ app.get('/register', (request, response) => {
   const templateVars = { user };
   response.render('user_registration', templateVars);
 });
+app.get(`/error400`, (request, response) => {
+  response.statusCode = 400;
+  response.redirect('400: Not good bro, not good.');
+});
 app.get(`*`, (request, response) => {
   response.statusCode = 404;
   response.send('404: Not good bro, not good.');
@@ -171,18 +175,17 @@ app.post('/register', (request, response) => {
   const username = request.body.username;
   const email = request.body.email;
   const password = request.body.password;
-
+  const uidUsed = getUidByEmail(email, userDataBase);
+  const usernameUsed = getUidByUsername(username, userDataBase);
+  if (username && email && password && !uidUsed && !usernameUsed) {
+    const user = new User(username, email, password);
+    userDataBase[user.uid] = user;
+    response.cookie('uid', user.uid);
+    console.log("app.post('/register') : userDataBase: ", userDataBase);
+    response.redirect('/urls');
+  }
   
-
-  // Look into express.static (for getting our css)
-  const user = new User(username, email, password);
-
-
-  
-  userDataBase[user.uid] = user;
-  response.cookie('uid', user.uid);
-  console.log("app.post('/register') : userDataBase: ", userDataBase);
-  response.redirect('/urls');
+  response.redirect('/error400');
 });
 
 /* Execution & Test Data */
