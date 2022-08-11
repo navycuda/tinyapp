@@ -38,6 +38,15 @@ class User {
   passwordIsValid(password) {
     return this.password === password;
   }
+  getUrls(database) {
+    const urls = {};
+    for (let key in database) {
+      if (database[key].userID === this.uid) {
+        urls[key] = database[key];
+      }
+    }
+    return urls;
+  }
 }
 /* Export Functions */
 /* Local Functions */
@@ -84,7 +93,6 @@ const getUidByEmail = (email, database) => {
   }
   return null;
 };
-
 
 
 
@@ -182,7 +190,7 @@ app.post('/logout', (request, response) => {
 app.post('/urls', (request, response) => {
   const user = getUserByRequest(request);
   if (!user) {
-    response.send('must be logged in to view url list');
+    response.send('must be logged in to add to url list');
     return;
   }
   const randomUrl = generateNewKey(6, urlDataBase);
