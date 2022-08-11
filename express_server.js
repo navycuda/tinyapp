@@ -3,8 +3,14 @@ const morgan = require('morgan');
 const express = require('express');
 const bcrypt = require('bcryptjs');
 const cookieSession = require('cookie-session');
-const { getRandomAlphanumericString } = require('@navycuda/lotide');
 const app = express();
+const {
+  generateNewKey,
+  getUidByUsername,
+  getUserByRequest,
+  getUidByEmail
+} = require(`./helpers`);
+const User = require('./User');
 
 /* Tcp:Http */
 const PORT = 8080;
@@ -34,56 +40,9 @@ const urlDataBase = {
 const userDataBase = {};
 
 /* Classes */
-class User {
-  constructor(username, email, password) {
-    this.uid = generateNewKey(6, userDataBase);
-    this.username = username;
-    this.email = email;
-    this.password = password;
-  }
-  getUrls(database) {
-    const urls = {};
-    for (let key in database) {
-      if (database[key].userID === this.uid) {
-        urls[key] = database[key];
-      }
-    }
-    return urls;
-  }
-}
+
 /* Local Functions */
-const generateNewKey = (length, comparisonData) => {
-  let isDefined = true;
-  let result;
-  while (isDefined) {
-    result = getRandomAlphanumericString(length);
-    if (!comparisonData[result]) {
-      isDefined = false;
-    }
-  }
-  return result;
-};
-const getUidByUsername = (username, database) => {
-  for (let key in database) {
-    if (database[key].username === username) {
-      return database[key].uid;
-    }
-  }
-  return null;
-};
-const getUserByRequest = (request) => {
-  const uid = request.session.uid;
-  const user = uid ? userDataBase[uid] : null;
-  return user;
-};
-const getUidByEmail = (email, database) => {
-  for (let key in database) {
-    if (database[key].email === email) {
-      return database[key].uid;
-    }
-  }
-  return null;
-};
+
 
 /* Endpoints */
 /**
@@ -118,13 +77,13 @@ app.get('/urls/new', (request, response) => {
 app.get('/urls/:id', (request, response) => {
   const user = getUserByRequest(request);
   if (!user) {
-    response.send('not logged in');
+    response.statusCode(400).send('not logged in');
     return;
   }
   const urlId = request.params.id;
   const url = urlDataBase[urlId];
   if (url.userID !== user.uid) {
-    response.send('you do not own this url');
+    response.statusCode(400).send('you do not own this url');
     return;
   }
   const templateVars = { user, id: urlId, longURL: urlDataBase[urlId].longURL };
@@ -148,17 +107,8 @@ app.get('/register', (request, response) => {
   const templateVars = { user };
   response.render('user_registration', templateVars);
 });
-app.get(`/error400`, (request, response) => {
-  response.statusCode = 400;
-  response.send('400: Not good bro, not good.');
-});
-app.get(`/error403`, (request, response) => {
-  response.statusCode = 403;
-  response.send('403: Not good bro, not good.');
-});
 app.get(`*`, (request, response) => {
-  response.statusCode = 404;
-  response.send('404: Not good bro, not good.');
+  response.statusCode(404).send('404: Not good bro, not good.');
 });
 
 /**
@@ -208,16 +158,16 @@ app.post('/urls/:id/delete', (request, response) => {
   const id = request.params.id;
   const url = urlDataBase[id];
   if (!url) {
-    response.send('id does not exist');
+    response.statusCode(400).send('id does not exist');
     return;
   }
   const user = getUserByRequest(request);
   if (!user) {
-    response.send('not logged in');
+    response.statusCode(400).send('not logged in');
     return;
   }
   if (user.uid !== url.userID) {
-    response.send('do not own this resource');
+    response.statusCode(400).send('do not own this resource');
     return;
   }
   delete urlDataBase[request.params.id];
@@ -235,8 +185,7 @@ app.post('/register', (request, response) => {
   const uidUsed = getUidByEmail(email, userDataBase);
   const usernameUsed = getUidByUsername(username, userDataBase);
   if (username && email && password && !uidUsed && !usernameUsed) {
-    const user = new User(username, email);
-
+    const user = new User(userDataBase, username, email);
     bcrypt.genSalt(10)
       .then((salt) => {
         return bcrypt.hash(password, salt);
