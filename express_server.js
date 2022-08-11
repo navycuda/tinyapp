@@ -17,10 +17,25 @@ app.use(express.static('public'));
 /* Arguments & Properties */
 const urlDataBase = {
   'b2xVn2': 'http://www.lighthouselabs.ca',
-  '9sm5xK': 'http://www.google.com'
+  '9sm5xK': {
+    longURL: 'http://www.google.com',
+    userid: 'uid'
+  }
 };
 const userDataBase = {};
 
+/* Classes */
+class User {
+  constructor(username, email, password) {
+    this.uid = generateNewKey(6, userDataBase);
+    this.username = username;
+    this.email = email;
+    this.password = password;
+  }
+  passwordIsValid(password) {
+    return this.password === password;
+  }
+}
 /* Export Functions */
 /* Local Functions */
 const getRandomNumber = (num) => {
@@ -67,19 +82,7 @@ const getUidByEmail = (email, database) => {
   return null;
 };
 
-/* Classes */
-class User {
-  constructor(username, email, password) {
-    this.uid = generateNewKey(6, userDataBase);
-    this.username = username;
-    this.email = email;
-    this.password = password;
-    this.tinyIds = [];
-  }
-  passwordIsValid(password) {
-    return this.password === password;
-  }
-}
+
 
 
 
