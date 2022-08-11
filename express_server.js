@@ -3,6 +3,7 @@ const morgan = require('morgan');
 const express = require('express');
 const cookieParser = require('cookie-parser');
 const app = express();
+const { getRandomAlphanumericString } = require('@navycuda/lotide');
 
 /* Tcp:Http */
 const PORT = 8080;
@@ -48,24 +49,12 @@ class User {
     return urls;
   }
 }
-/* Export Functions */
 /* Local Functions */
-const getRandomNumber = (num) => {
-  return (Math.floor(Math.random() * num));
-};
-const generateRandomString = (length) => {
-  const chars = "aAbBcCdDeEfFgGhHiIjJkKlLmMnNoOpPqQrRsStTuUvVwWxXyYzZ0123456789";
-  let result = '';
-  for (let l = 0; l < length; l++) {
-    result += chars[getRandomNumber(chars.length)];
-  }
-  return result;
-};
 const generateNewKey = (length, comparisonData) => {
   let isDefined = true;
   let result;
   while (isDefined) {
-    result = generateRandomString(length);
+    result = getRandomAlphanumericString(length);
     if (!comparisonData[result]) {
       isDefined = false;
     }
