@@ -1,10 +1,6 @@
 /* Require */
 const { getRandomAlphanumericString } = require('@navycuda/lotide');
 
-/* Tcp:Http */
-/* Middleware */
-/* Arguments & Properties */
-/* Local Functions */
 /* Export Functions */
 const generateNewKey = (length, comparisonData) => {
   let isDefined = true;

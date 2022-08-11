@@ -27,22 +27,8 @@ app.use(cookieSession({
 
 /* Arguments & Properties */
 const errorMsg = "Not good bro, not good.";
-const urlDataBase = {
-  'b2xVn2': {
-    longURL: 'http://www.lighthouselabs.ca',
-    userID: '1a3f2t'
-  },
-  '9sm5xK': {
-    longURL: 'http://www.google.com',
-    userID: '1a2f2r'
-  }
-};
+const urlDataBase = {};
 const userDataBase = {};
-
-/* Classes */
-
-/* Local Functions */
-
 
 /* Endpoints */
 /**
@@ -206,7 +192,6 @@ app.post('/register', (request, response) => {
     console.log(`/register\n\tuserDatabase\n***\n`, userDataBase);
     return;
   }
-
   response.statusCode(400).send(`${errorMsg} Username or Email already exists.`);
 });
 
@@ -214,5 +199,3 @@ app.post('/register', (request, response) => {
 app.listen(PORT, () => {
   console.log(`Example app listening on port ${PORT}`);
 });
-
-console.log(`userDatabase\n***\n`, userDataBase);
