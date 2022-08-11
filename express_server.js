@@ -127,6 +127,10 @@ app.get(`/error400`, (request, response) => {
   response.statusCode = 400;
   response.redirect('400: Not good bro, not good.');
 });
+app.get(`/error403`, (request, response) => {
+  response.statusCode = 403;
+  response.redirect('400: Not good bro, not good.');
+});
 app.get(`*`, (request, response) => {
   response.statusCode = 404;
   response.send('404: Not good bro, not good.');
@@ -148,7 +152,7 @@ app.post('/login', (request, response) => {
       return;
     }
   }
-  response.redirect('/login');
+  response.redirect('/error403');
 });
 // POST - user logout
 app.post('/logout', (request, response) => {
