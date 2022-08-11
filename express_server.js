@@ -1,9 +1,10 @@
 /* Require */
 const morgan = require('morgan');
 const express = require('express');
+const bcrypt = require('bcryptjs');
 const cookieParser = require('cookie-parser');
-const app = express();
 const { getRandomAlphanumericString } = require('@navycuda/lotide');
+const app = express();
 
 /* Tcp:Http */
 const PORT = 8080;
@@ -37,7 +38,7 @@ class User {
     this.password = password;
   }
   passwordIsValid(password) {
-    return this.password === password;
+    return bcrypt.compareSync(password, this.password);
   }
   getUrls(database) {
     const urls = {};
@@ -172,6 +173,7 @@ app.post('/login', (request, response) => {
   if (uid) {
     const user = userDataBase[uid];
     if (user.passwordIsValid(password)) {
+      console.log(`  > userid "${uid}" logged in`);
       response.cookie('uid', uid);
       response.redirect('/urls');
       return;
@@ -222,17 +224,16 @@ app.post('/urls/:id', (request, response) => {
   response.redirect('/urls');
 });
 app.post('/register', (request, response) => {
-  console.log("app.post('/register')",request.body);
   const username = request.body.username;
   const email = request.body.email;
   const password = request.body.password;
+  const hashedPassword = bcrypt.hashSync(password, 10);
   const uidUsed = getUidByEmail(email, userDataBase);
   const usernameUsed = getUidByUsername(username, userDataBase);
   if (username && email && password && !uidUsed && !usernameUsed) {
-    const user = new User(username, email, password);
+    const user = new User(username, email, hashedPassword);
     userDataBase[user.uid] = user;
     response.cookie('uid', user.uid);
-    console.log("app.post('/register') : userDataBase: ", userDataBase);
     response.redirect('/urls');
     return;
   }
@@ -243,10 +244,3 @@ app.post('/register', (request, response) => {
 app.listen(PORT, () => {
   console.log(`Example app listening on port ${PORT}`);
 });
-
-const navycuda = new User('navycuda', 'n@n.com', 'noPassword');
-navycuda.uid = '1a2f2r';
-const topsecret = new User('topSecret', 't@n.com', 'password');
-topsecret.uid = '1a3f2t';
-userDataBase[navycuda.uid] = navycuda;
-userDataBase[topsecret.uid] = topsecret;
