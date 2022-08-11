@@ -247,9 +247,9 @@ app.post('/register', (request, response) => {
         request.session.uid = user.uid;
         response.redirect('/urls');
       });
+    console.log(`/register\n\tuserDatabase\n***\n`, userDataBase);
     return;
   }
-  console.log(`/register\n\tuserDatabase\n***\n`, userDataBase);
 
   response.statusCode(400).send(`${errorMsg} Username or Email already exists.`);
 });
