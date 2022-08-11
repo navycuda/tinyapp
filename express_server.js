@@ -98,16 +98,16 @@ const getUidByEmail = (email, database) => {
 
 
 /* Endpoints */
-// GET - HomePage
+/**
+ * GET
+ */
 app.get('/', (request, response) => {
   response.redirect('/urls');
 });
-// GET - /u/:id
 app.get('/u/:id', (request, response) => {
   const longURL = (urlDataBase[request.params.id]) ? urlDataBase[request.params.id].longURL : 'short url not Found';
   response.redirect(longURL);
 });
-// GET - urls
 app.get('/urls', (request, response) => {
   const user = getUserByRequest(request);
   if (!user) {
@@ -118,7 +118,6 @@ app.get('/urls', (request, response) => {
   const templateVars = { user, urls };
   response.render('urls_index', templateVars);
 });
-// Get - new url
 app.get('/urls/new', (request, response) => {
   const user = getUserByRequest(request);
   if (!user) {
@@ -128,7 +127,6 @@ app.get('/urls/new', (request, response) => {
   const templateVars = { user };
   response.render('urls_new', templateVars);
 });
-// GET - url by ID
 app.get('/urls/:id', (request, response) => {
   const user = getUserByRequest(request);
   if (!user) {
@@ -144,7 +142,6 @@ app.get('/urls/:id', (request, response) => {
   const templateVars = { user, id: urlId, longURL: urlDataBase[urlId].longURL };
   response.render('urls_show', templateVars);
 });
-// GET - login
 app.get('/login', (request, response) => {
   const user = getUserByRequest(request);
   if (user) {
@@ -154,7 +151,6 @@ app.get('/login', (request, response) => {
   const templateVars = { user };
   response.render('user_login', templateVars);
 });
-// GET - register
 app.get('/register', (request, response) => {
   const user = getUserByRequest(request);
   if (user) {
@@ -177,7 +173,9 @@ app.get(`*`, (request, response) => {
   response.send('404: Not good bro, not good.');
 });
 
-// POST - user login
+/**
+ * POST
+ */
 app.post('/login', (request, response) => {
   const username = request.body.username;
   const password = request.body.password;
@@ -195,30 +193,24 @@ app.post('/login', (request, response) => {
   }
   response.redirect('/error403');
 });
-// POST - user logout
 app.post('/logout', (request, response) => {
   response.clearCookie('uid');
   response.redirect('/urls');
 });
-// POST - new url
 app.post('/urls', (request, response) => {
   const user = getUserByRequest(request);
   if (!user) {
     response.send('must be logged in to add to url list');
     return;
   }
-  console.log(`request.body`, request.body);
   const randomUrl = generateNewKey(6, urlDataBase);
-  console.log(`randomUrl`, randomUrl);
   urlDataBase[randomUrl] = {
     longURL: request.body.longURL,
     userID: user.uid
   };
   urlDataBase[randomUrl].userID = user.uid;
-  //response.send(`${randomUrl} and the long url is??? ${request.body.longURL}`);
   response.redirect(`/urls/${randomUrl}`);
 });
-// POST - Delete Url
 app.post('/urls/:id/delete', (request, response) => {
   const id = request.params.id;
   const url = urlDataBase[id];
@@ -238,7 +230,6 @@ app.post('/urls/:id/delete', (request, response) => {
   delete urlDataBase[request.params.id];
   response.redirect('/urls');
 });
-// POST - Edit the long URL
 app.post('/urls/:id', (request, response) => {
   const id = request.params.id;
   urlDataBase[id].longURL = request.body.longURL;
@@ -274,5 +265,4 @@ topsecret.uid = '1a3f2t';
 userDataBase[navycuda.uid] = navycuda;
 userDataBase[topsecret.uid] = topsecret;
 
-console.log(userDataBase);
 /* Exports */
