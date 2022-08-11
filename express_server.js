@@ -90,7 +90,7 @@ app.get('/', (request, response) => {
 });
 // GET - /u/:id
 app.get('/u/:id', (request, response) => {
-  const longURL = (urlDataBase[request.params.id]) ? urlDataBase[request.params.id] : 'notFound';
+  const longURL = (urlDataBase[request.params.id]) ? urlDataBase[request.params.id] : 'short url not Found';
   response.redirect(longURL);
 });
 // GET - urls
@@ -102,6 +102,10 @@ app.get('/urls', (request, response) => {
 // Get - new url
 app.get('/urls/new', (request, response) => {
   const user = getUserByRequest(request);
+  if (!user) {
+    response.redirect('/login');
+    return;
+  }
   const templateVars = { user };
   response.render('urls_new', templateVars);
 });
@@ -114,12 +118,21 @@ app.get('/urls/:id', (request, response) => {
 });
 // GET - login
 app.get('/login', (request, response) => {
-  const templateVars = { user: null };
+  const user = getUserByRequest(request);
+  if (user) {
+    response.redirect('/urls');
+    return;
+  }
+  const templateVars = { user };
   response.render('user_login', templateVars);
 });
 // GET - register
 app.get('/register', (request, response) => {
-  const user = null;
+  const user = getUserByRequest(request);
+  if (user) {
+    response.redirect('/urls');
+    return;
+  }
   const templateVars = { user };
   response.render('user_registration', templateVars);
 });
@@ -161,6 +174,11 @@ app.post('/logout', (request, response) => {
 });
 // POST - new url
 app.post('/urls', (request, response) => {
+  const user = getUserByRequest(request);
+  if (!user) {
+    response.send('must be logged in to view url list');
+    return;
+  }
   const randomUrl = generateNewKey(6, urlDataBase);
   urlDataBase[randomUrl] = request.body.longURL;
   //response.send(`${randomUrl} and the long url is??? ${request.body.longURL}`);
