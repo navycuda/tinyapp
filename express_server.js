@@ -52,11 +52,17 @@ app.get('/', (request, response) => {
   response.redirect('/urls');
 });
 app.get('/u/:id', (request, response) => {
-  const longURL = (urlDataBase[request.params.id]) ? urlDataBase[request.params.id].longURL : 'short url not Found';
-  response.redirect(longURL);
+  const id = request.params.id;
+  const url = urlDataBase[id];
+  if (url) {
+    const longURL = url.longURL;
+    response.redirect(longURL);
+    return;
+  }
+  response.statusCode(400).send('shortened url not found');
 });
 app.get('/urls', (request, response) => {
-  const user = getUserByRequest(request);
+  const user = getUserByRequest(request, userDataBase);
   if (!user) {
     response.redirect('/login');
     return;
@@ -66,7 +72,7 @@ app.get('/urls', (request, response) => {
   response.render('urls_index', templateVars);
 });
 app.get('/urls/new', (request, response) => {
-  const user = getUserByRequest(request);
+  const user = getUserByRequest(request, userDataBase);
   if (!user) {
     response.redirect('/login');
     return;
@@ -75,7 +81,7 @@ app.get('/urls/new', (request, response) => {
   response.render('urls_new', templateVars);
 });
 app.get('/urls/:id', (request, response) => {
-  const user = getUserByRequest(request);
+  const user = getUserByRequest(request, userDataBase);
   if (!user) {
     response.statusCode(400).send('not logged in');
     return;
@@ -90,7 +96,7 @@ app.get('/urls/:id', (request, response) => {
   response.render('urls_show', templateVars);
 });
 app.get('/login', (request, response) => {
-  const user = getUserByRequest(request);
+  const user = getUserByRequest(request, userDataBase);
   if (user) {
     response.redirect('/urls');
     return;
@@ -99,7 +105,7 @@ app.get('/login', (request, response) => {
   response.render('user_login', templateVars);
 });
 app.get('/register', (request, response) => {
-  const user = getUserByRequest(request);
+  const user = getUserByRequest(request, userDataBase);
   if (user) {
     response.redirect('/urls');
     return;
@@ -141,7 +147,7 @@ app.post('/logout', (request, response) => {
   response.redirect('/urls');
 });
 app.post('/urls', (request, response) => {
-  const user = getUserByRequest(request);
+  const user = getUserByRequest(request, userDataBase);
   if (!user) {
     response.send('must be logged in to add to url list');
     return;
@@ -149,7 +155,8 @@ app.post('/urls', (request, response) => {
   const randomUrl = generateNewKey(6, urlDataBase);
   urlDataBase[randomUrl] = {
     longURL: request.body.longURL,
-    userID: user.uid
+    userID: user.uid,
+    redirects: 0
   };
   urlDataBase[randomUrl].userID = user.uid;
   response.redirect(`/urls/${randomUrl}`);
@@ -161,7 +168,7 @@ app.post('/urls/:id/delete', (request, response) => {
     response.statusCode(400).send('id does not exist');
     return;
   }
-  const user = getUserByRequest(request);
+  const user = getUserByRequest(request, userDataBase);
   if (!user) {
     response.statusCode(400).send('not logged in');
     return;

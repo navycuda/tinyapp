@@ -28,6 +28,9 @@ const getUidByUsername = (username, database) => {
 const getUserByRequest = (request, database) => {
   const uid = request.session.uid;
   const user = uid ? database[uid] : null;
+  if (!uid) {
+    request.session = null;
+  }
   return user;
 };
 const getUidByEmail = (email, database) => {
