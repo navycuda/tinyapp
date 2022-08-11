@@ -248,6 +248,8 @@ app.post('/register', (request, response) => {
       });
     return;
   }
+  console.log(`/register\n\tuserDatabase\n***\n`, userDataBase);
+
   response.redirect('/error400');
 });
 
@@ -255,3 +257,5 @@ app.post('/register', (request, response) => {
 app.listen(PORT, () => {
   console.log(`Example app listening on port ${PORT}`);
 });
+
+console.log(`userDatabase\n***\n`, userDataBase);
