@@ -16,10 +16,13 @@ app.use(express.static('public'));
 
 /* Arguments & Properties */
 const urlDataBase = {
-  'b2xVn2': 'http://www.lighthouselabs.ca',
+  'b2xVn2': {
+    longURL: 'http://www.lighthouselabs.ca',
+    userID: '1a3f2t'
+  },
   '9sm5xK': {
     longURL: 'http://www.google.com',
-    userid: 'uid'
+    userID: '1a2f2r'
   }
 };
 const userDataBase = {};
@@ -93,7 +96,7 @@ app.get('/', (request, response) => {
 });
 // GET - /u/:id
 app.get('/u/:id', (request, response) => {
-  const longURL = (urlDataBase[request.params.id]) ? urlDataBase[request.params.id] : 'short url not Found';
+  const longURL = (urlDataBase[request.params.id]) ? urlDataBase[request.params.id].longURL : 'short url not Found';
   response.redirect(longURL);
 });
 // GET - urls
@@ -116,7 +119,7 @@ app.get('/urls/new', (request, response) => {
 app.get('/urls/:id', (request, response) => {
   const urlId = request.params.id;
   const user = getUserByRequest(request);
-  const templateVars = { user, id: urlId, longURL: urlDataBase[urlId] };
+  const templateVars = { user, id: urlId, longURL: urlDataBase[urlId].longURL };
   response.render('urls_show', templateVars);
 });
 // GET - login
@@ -183,7 +186,8 @@ app.post('/urls', (request, response) => {
     return;
   }
   const randomUrl = generateNewKey(6, urlDataBase);
-  urlDataBase[randomUrl] = request.body.longURL;
+  urlDataBase[randomUrl].longURL = request.body.longURL;
+  urlDataBase[randomUrl].userID = user.uid;
   //response.send(`${randomUrl} and the long url is??? ${request.body.longURL}`);
   response.redirect(`/urls/${randomUrl}`);
 });
@@ -195,7 +199,7 @@ app.post('/urls/:id/delete', (request, response) => {
 // POST - Edit the long URL
 app.post('/urls/:id', (request, response) => {
   const id = request.params.id;
-  urlDataBase[id] = request.body.longURL;
+  urlDataBase[id].longURL = request.body.longURL;
   response.redirect('/urls');
 });
 app.post('/register', (request, response) => {
@@ -222,7 +226,9 @@ app.listen(PORT, () => {
 });
 
 const navycuda = new User('navycuda', 'n@n.com', 'noPassword');
+navycuda.uid = '1a2f2r';
 const topsecret = new User('topSecret', 't@n.com', 'password');
+topsecret.uid = '1a3f2t';
 userDataBase[navycuda.uid] = navycuda;
 userDataBase[topsecret.uid] = topsecret;
 
