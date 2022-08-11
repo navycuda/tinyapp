@@ -45,7 +45,7 @@ const generateNewKey = (length, comparisonData) => {
   }
   return result;
 };
-const findUidByUsername = (username, database) => {
+const getUidByUsername = (username, database) => {
   for (let key in database) {
     if (database[key].username === username) {
       return database[key].uid;
@@ -56,7 +56,15 @@ const findUidByUsername = (username, database) => {
 const getUserByRequest = (request) => {
   const uid = request.cookies.uid;
   const user = uid ? userDataBase[uid] : null;
-  return user
+  return user;
+};
+const getUidByEmail = (email, database) => {
+  for (let key in database) {
+    if (database[key].email === email) {
+      return database[key].uid;
+    }
+  }
+  return false;
 };
 
 /* Classes */
@@ -124,7 +132,7 @@ app.get(`*`, (request, response) => {
 app.post('/login', (request, response) => {
   const username = request.body.username;
   const password = request.body.password;
-  const uid = findUidByUsername(username, userDataBase);
+  const uid = getUidByUsername(username, userDataBase);
   if (uid) {
     const user = userDataBase[uid];
     if (user.passwordIsValid(password)) {
@@ -163,8 +171,12 @@ app.post('/register', (request, response) => {
   const username = request.body.username;
   const email = request.body.email;
   const password = request.body.password;
+
+  
+
   // Look into express.static (for getting our css)
   const user = new User(username, email, password);
+
 
   
   userDataBase[user.uid] = user;
