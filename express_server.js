@@ -2,7 +2,7 @@
 const morgan = require('morgan');
 const express = require('express');
 const bcrypt = require('bcryptjs');
-const cookieParser = require('cookie-parser');
+const cookieSession = require('cookie-session');
 const { getRandomAlphanumericString } = require('@navycuda/lotide');
 const app = express();
 
@@ -13,10 +13,14 @@ const PORT = 8080;
 app.set('view engine', 'ejs');
 app.use(morgan('dev'));
 app.use(express.urlencoded({ extended: true }));
-app.use(cookieParser());
 app.use(express.static('public'));
+app.use(cookieSession({
+  name: "enigmaSecure",
+  keys: [ 'EKMFLGDQVZNTOWYHXUSPAIBRCJ', 'BDFHJLCPRTXVZNYEIWGAKMUSQO' ]
+}));
 
 /* Arguments & Properties */
+const errorMsg = "Not good bro, not good.";
 const urlDataBase = {
   'b2xVn2': {
     longURL: 'http://www.lighthouselabs.ca',
@@ -71,7 +75,7 @@ const getUidByUsername = (username, database) => {
   return null;
 };
 const getUserByRequest = (request) => {
-  const uid = request.cookies.uid;
+  const uid = request.session.uid;
   const user = uid ? userDataBase[uid] : null;
   return user;
 };
@@ -174,15 +178,16 @@ app.post('/login', (request, response) => {
     const user = userDataBase[uid];
     if (user.passwordIsValid(password)) {
       console.log(`  > userid "${uid}" logged in`);
-      response.cookie('uid', uid);
+      request.session.uid = uid;
       response.redirect('/urls');
       return;
     }
+    return response.status(401).send('Access Denied : Incorrect Password');
   }
-  response.redirect('/error403');
+  response.status(401).send('Username or email not found');
 });
 app.post('/logout', (request, response) => {
-  response.clearCookie('uid');
+  request.session = null;
   response.redirect('/urls');
 });
 app.post('/urls', (request, response) => {
@@ -227,14 +232,20 @@ app.post('/register', (request, response) => {
   const username = request.body.username;
   const email = request.body.email;
   const password = request.body.password;
-  const hashedPassword = bcrypt.hashSync(password, 10);
   const uidUsed = getUidByEmail(email, userDataBase);
   const usernameUsed = getUidByUsername(username, userDataBase);
   if (username && email && password && !uidUsed && !usernameUsed) {
-    const user = new User(username, email, hashedPassword);
-    userDataBase[user.uid] = user;
-    response.cookie('uid', user.uid);
-    response.redirect('/urls');
+    const user = new User(username, email);
+
+    bcrypt.genSalt(10)
+      .then((salt) => {
+        return bcrypt.hash(password, salt);
+      })
+      .then((hash) => {
+        user.password = hash;
+        userDataBase[user.uid] = user;
+        response.redirect('/urls');
+      });
     return;
   }
   response.redirect('/error400');
