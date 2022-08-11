@@ -12,7 +12,7 @@ const PORT = 8080;
 /* Middleware */
 app.set('view engine', 'ejs');
 app.use(morgan('dev'));
-app.use(express.urlencoded({ extended: true }));
+app.use(express.urlencoded({ extended: false }));
 app.use(express.static('public'));
 app.use(cookieSession({
   name: "enigmaSecure",
@@ -40,9 +40,6 @@ class User {
     this.username = username;
     this.email = email;
     this.password = password;
-  }
-  passwordIsValid(password) {
-    return bcrypt.compareSync(password, this.password);
   }
   getUrls(database) {
     const urls = {};
@@ -176,15 +173,18 @@ app.post('/login', (request, response) => {
   }
   if (uid) {
     const user = userDataBase[uid];
-    if (user.passwordIsValid(password)) {
-      console.log(`  > userid "${uid}" logged in`);
-      request.session.uid = uid;
-      response.redirect('/urls');
-      return;
-    }
-    return response.status(401).send('Access Denied : Incorrect Password');
+    bcrypt.compare(password, user.password)
+      .then((result) => {
+        if (result) {
+          request.session.uid = uid;
+          response.redirect('/urls');
+        } else {
+          return response.status(401).send('Access Denied : Incorrect Password');
+        }
+      });
+  } else {
+    response.status(401).send('Username or email not found');
   }
-  response.status(401).send('Username or email not found');
 });
 app.post('/logout', (request, response) => {
   request.session = null;
@@ -244,13 +244,14 @@ app.post('/register', (request, response) => {
       .then((hash) => {
         user.password = hash;
         userDataBase[user.uid] = user;
+        request.session.uid = user.uid;
         response.redirect('/urls');
       });
     return;
   }
   console.log(`/register\n\tuserDatabase\n***\n`, userDataBase);
 
-  response.redirect('/error400');
+  response.statusCode(400).send(`${errorMsg} Username or Email already exists.`);
 });
 
 /* Execution & Test Data */
