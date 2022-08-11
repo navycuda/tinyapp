@@ -110,7 +110,12 @@ app.get('/u/:id', (request, response) => {
 // GET - urls
 app.get('/urls', (request, response) => {
   const user = getUserByRequest(request);
-  const templateVars = { user, urls: urlDataBase };
+  if (!user) {
+    response.redirect('/login');
+    return;
+  }
+  const urls = user.getUrls(urlDataBase);
+  const templateVars = { user, urls };
   response.render('urls_index', templateVars);
 });
 // Get - new url
@@ -125,8 +130,17 @@ app.get('/urls/new', (request, response) => {
 });
 // GET - url by ID
 app.get('/urls/:id', (request, response) => {
-  const urlId = request.params.id;
   const user = getUserByRequest(request);
+  if (!user) {
+    response.send('not logged in');
+    return;
+  }
+  const urlId = request.params.id;
+  const url = urlDataBase[urlId];
+  if (url.userID !== user.uid) {
+    response.send('you do not own this url');
+    return;
+  }
   const templateVars = { user, id: urlId, longURL: urlDataBase[urlId].longURL };
   response.render('urls_show', templateVars);
 });
@@ -193,14 +207,34 @@ app.post('/urls', (request, response) => {
     response.send('must be logged in to add to url list');
     return;
   }
+  console.log(`request.body`, request.body);
   const randomUrl = generateNewKey(6, urlDataBase);
-  urlDataBase[randomUrl].longURL = request.body.longURL;
+  console.log(`randomUrl`, randomUrl);
+  urlDataBase[randomUrl] = {
+    longURL: request.body.longURL,
+    userID: user.uid
+  };
   urlDataBase[randomUrl].userID = user.uid;
   //response.send(`${randomUrl} and the long url is??? ${request.body.longURL}`);
   response.redirect(`/urls/${randomUrl}`);
 });
 // POST - Delete Url
 app.post('/urls/:id/delete', (request, response) => {
+  const id = request.params.id;
+  const url = urlDataBase[id];
+  if (!url) {
+    response.send('id does not exist');
+    return;
+  }
+  const user = getUserByRequest(request);
+  if (!user) {
+    response.send('not logged in');
+    return;
+  }
+  if (user.uid !== url.userID) {
+    response.send('do not own this resource');
+    return;
+  }
   delete urlDataBase[request.params.id];
   response.redirect('/urls');
 });
