@@ -125,11 +125,11 @@ app.get('/register', (request, response) => {
 });
 app.get(`/error400`, (request, response) => {
   response.statusCode = 400;
-  response.redirect('400: Not good bro, not good.');
+  response.send('400: Not good bro, not good.');
 });
 app.get(`/error403`, (request, response) => {
   response.statusCode = 403;
-  response.redirect('400: Not good bro, not good.');
+  response.send('403: Not good bro, not good.');
 });
 app.get(`*`, (request, response) => {
   response.statusCode = 404;
