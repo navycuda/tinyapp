@@ -13,6 +13,7 @@
         <thead>
           <tr>
             <th scope="col">Short URL ID</th>
+            <th scope="col">Redirects</th>
             <th scope="col">Long URL</th>
             <th scope="col">Edit</th>
             <th scope="col">Delete</th>
@@ -24,6 +25,7 @@
               <td>
                 <a href="/u/<%= id %>" class="btn btn-primary"><%= id %></a>
               </td>
+              <td><%= urls[id].redirects %.</td>
               <td><%= urls[id].longURL %></td>
               <td>
                 <form method="GET" action="/urls/<%= id %>">
