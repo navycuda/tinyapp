@@ -234,6 +234,7 @@ app.post('/register', (request, response) => {
     response.cookie('uid', user.uid);
     console.log("app.post('/register') : userDataBase: ", userDataBase);
     response.redirect('/urls');
+    return;
   }
   response.redirect('/error400');
 });
