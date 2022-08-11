@@ -83,9 +83,6 @@ const getUidByEmail = (email, database) => {
   return null;
 };
 
-
-
-
 /* Endpoints */
 /**
  * GET
@@ -238,7 +235,6 @@ app.post('/register', (request, response) => {
     console.log("app.post('/register') : userDataBase: ", userDataBase);
     response.redirect('/urls');
   }
-  
   response.redirect('/error400');
 });
 
@@ -253,5 +249,3 @@ const topsecret = new User('topSecret', 't@n.com', 'password');
 topsecret.uid = '1a3f2t';
 userDataBase[navycuda.uid] = navycuda;
 userDataBase[topsecret.uid] = topsecret;
-
-/* Exports */
