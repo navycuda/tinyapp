@@ -136,7 +136,10 @@ app.get(`*`, (request, response) => {
 app.post('/login', (request, response) => {
   const username = request.body.username;
   const password = request.body.password;
-  const uid = getUidByUsername(username, userDataBase);
+  let uid = getUidByUsername(username, userDataBase);
+  if (!uid) {
+    uid = getUidByEmail(username, userDataBase);
+  }
   if (uid) {
     const user = userDataBase[uid];
     if (user.passwordIsValid(password)) {
