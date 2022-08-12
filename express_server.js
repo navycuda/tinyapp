@@ -40,6 +40,7 @@ app.get('/', (request, response) => {
 app.get('/u/:id', (request, response) => {
   const id = request.params.id;
   const url = urlDataBase[id];
+  url.redirects ++;
   if (url) {
     const longURL = url.longURL;
     response.redirect(longURL);
@@ -144,7 +145,6 @@ app.post('/urls', (request, response) => {
     userID: user.uid,
     redirects: 0
   };
-  urlDataBase[randomUrl].userID = user.uid;
   response.redirect(`/urls/${randomUrl}`);
 });
 app.post('/urls/:id/delete', (request, response) => {
