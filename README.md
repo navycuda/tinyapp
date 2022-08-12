@@ -38,3 +38,32 @@ node express_server.js
 
 ## Documentation
 
+### Important!
+
+TinyApp : Url Shortener does not have any database or other means of storing its database long term.  Currently both the url and user database are held within memory during the loaded server session.  If the server is shut down, or otherwise goes offline the user and url databases are emptied.
+
+User accounts are randomly assigned user id's, so session cookies from previous instances of the server will not continue to work.
+
+### Basic Usage
+
+Sign up for the service, then create shortened urls.  Shortened urls are owned by the creator and can be edited or deleted by the owner only.  Shortened urls can be used by anyone.
+
+| ![Login Page](./public/img/login.png) |
+|:--:|
+| `Login Page` This is the page the user logs in, using either their email or username |
+
+| ![Registration Page](./public/img/registration.png) |
+|:--:|
+| `Registration Page` This is the page a new user signs up for the url service. |
+
+| ![Create Url](./public/img/createUrl.png) |
+|:--:|
+| `Create Url` The page to create a new url for the users personal index |
+
+| ![Edit Url](./public/img/editUrl.png) |
+|:--:|
+| `Edit Url` If the redirect to address needs to be modifed, this is the page for that. |
+
+| ![Url Index](./public/img/urlIndex.png) |
+|:--:|
+| `Url Index` The list of shortened urls maintained by this user. |
