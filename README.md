@@ -8,6 +8,8 @@ A web app to provide url shortening for messages that have character limits.
 
 The tinyapp url shortener is an educational project to help expand this students understanding of creating a node webserver and deploying a simple web app.
 
+I intentionally avoided html/css polishing because I am not yet experienced enough to make that an intelligent use of my time.  Instead I focused on consolidated and simplifying my code.
+
 ## Requirements
 
 Node v12
