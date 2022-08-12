@@ -22,7 +22,7 @@
       <div class="col" style="display: flex; justify-content: end;">
         <% if (user) { %>
           <form method="POST" action="/logout">
-            Logged in as: <%= user.email %>
+            Logged in as: <%= user.username %>  (<%= user.email %>)
             <button type="submit" class="btn btn-primary">logout</button>
           </form>
         <% } else { %>
