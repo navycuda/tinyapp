@@ -168,7 +168,7 @@ app.delete('/urls/:id/delete', (request, response) => {
   delete urlDataBase[request.params.id];
   response.redirect('/urls');
 });
-app.post('/urls/:id', (request, response) => {
+app.put('/urls/:id', (request, response) => {
   const id = request.params.id;
   urlDataBase[id].longURL = request.body.longURL;
   response.redirect('/urls');
