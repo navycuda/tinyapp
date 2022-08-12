@@ -11,12 +11,12 @@ const {
   getUidByEmail
 } = require(`./helpers`);
 const User = require('./User');
+const methodOverride = require('method-override');
 
 /* Tcp:Http */
 const PORT = 8080;
 
 /* Middleware */
-app.set('view engine', 'ejs');
 app.use(morgan('dev'));
 app.use(express.urlencoded({ extended: false }));
 app.use(express.static('public'));
@@ -24,7 +24,9 @@ app.use(cookieSession({
   name: "enigmaSecure",
   keys: [ 'EKMFLGDQVZNTOWYHXUSPAIBRCJ', 'BDFHJLCPRTXVZNYEIWGAKMUSQO' ]
 }));
+app.use(methodOverride('_method'));
 
+app.set('view engine', 'ejs');
 /* Arguments & Properties */
 const errorMsg = "Not good bro, not good.";
 const urlDataBase = {};
@@ -147,7 +149,7 @@ app.post('/urls', (request, response) => {
   };
   response.redirect(`/urls/${randomUrl}`);
 });
-app.post('/urls/:id/delete', (request, response) => {
+app.delete('/urls/:id/delete', (request, response) => {
   const id = request.params.id;
   const url = urlDataBase[id];
   if (!url) {
